@@ -37,13 +37,13 @@ export function initMixin (Vue: Class<Component>) {
     } else {
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
-        options || {},
+        options || {}, // 该options 是new Vue时 传入的对象
         vm
       )
     }
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
-      initProxy(vm)
+      initProxy(vm)  // 定义了开发环境的Proxy
     } else {
       vm._renderProxy = vm
     }

@@ -18,7 +18,7 @@ export function initExtend (Vue: GlobalAPI) {
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
-    const Super = this
+    const Super = this // Vue
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
@@ -33,8 +33,8 @@ export function initExtend (Vue: GlobalAPI) {
     const Sub = function VueComponent (options) {
       this._init(options)
     }
-    Sub.prototype = Object.create(Super.prototype)
-    Sub.prototype.constructor = Sub
+    Sub.prototype = Object.create(Super.prototype) // 子类拥有vue原型上的方法
+    Sub.prototype.constructor = Sub // 重置子类的构造函数
     Sub.cid = cid++
     Sub.options = mergeOptions(
       Super.options,
@@ -53,7 +53,7 @@ export function initExtend (Vue: GlobalAPI) {
     }
 
     // allow further extension/mixin/plugin usage
-    Sub.extend = Super.extend
+    Sub.extend = Super.extend // 子类上也有extend方法
     Sub.mixin = Super.mixin
     Sub.use = Super.use
 

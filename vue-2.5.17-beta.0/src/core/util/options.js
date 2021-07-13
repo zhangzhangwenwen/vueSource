@@ -136,13 +136,9 @@ function mergeHook (
   parentVal: ?Array<Function>,
   childVal: ?Function | ?Array<Function>
 ): ?Array<Function> {
-  return childVal
-    ? parentVal
-      ? parentVal.concat(childVal)
-      : Array.isArray(childVal)
-        ? childVal
-        : [childVal]
-    : parentVal
+  return childVal ? 
+  (parentVal ? parentVal.concat(childVal) : (Array.isArray(childVal) ? childVal : [childVal])) 
+  : parentVal
 }
 
 LIFECYCLE_HOOKS.forEach(hook => {
@@ -277,7 +273,7 @@ function normalizeProps (options: Object, vm: ?Component) {
   if (!props) return
   const res = {}
   let i, val, name
-  if (Array.isArray(props)) {
+  if (Array.isArray(props)) { // 对数组的处理
     i = props.length
     while (i--) {
       val = props[i]
@@ -288,7 +284,7 @@ function normalizeProps (options: Object, vm: ?Component) {
         warn('props must be strings when using array syntax.')
       }
     }
-  } else if (isPlainObject(props)) {
+  } else if (isPlainObject(props)) { // 对对象的处理
     for (const key in props) {
       val = props[key]
       name = camelize(key)
@@ -363,21 +359,39 @@ function assertObjectType (name: string, value: any, vm: ?Component) {
  * Core utility used in both instantiation and inheritance.
  */
 export function mergeOptions (
-  parent: Object,
-  child: Object,
+  parent: Object, // Vue 本身有一些属性
+  child: Object, // 用户传入的options是new Vue时候的对象
   vm?: Component
 ): Object {
   if (process.env.NODE_ENV !== 'production') {
+    //1、合法性校验检查组件名称的合法性 new Vue({   components: { comName1, comName2 } } )
     checkComponents(child)
   }
 
   if (typeof child === 'function') {
     child = child.options
+    //如果传入的是类型是function，则取其options
   }
 
-  normalizeProps(child, vm)
+  normalizeProps(child, vm) // props 规整
+  /**
+   * props: ['title', 'likes', 'isPublished', 'commentIds', 'author'],
+    ...
+    //对象模式
+    props:{
+      title:{
+        type:String,
+        default:"this is zte phone"
+      },
+      likes:{
+        type:String,
+        default:"this like phone"
+      }
+    }
+    // 处理之后的结果 title: { type: f string(), default: 'zxczc' }
+   */
   normalizeInject(child, vm)
-  normalizeDirectives(child)
+  normalizeDirectives(child) // 指令处理
   const extendsFrom = child.extends
   if (extendsFrom) {
     parent = mergeOptions(parent, extendsFrom, vm)
@@ -398,8 +412,8 @@ export function mergeOptions (
     }
   }
   function mergeField (key) {
-    const strat = strats[key] || defaultStrat
-    options[key] = strat(parent[key], child[key], vm, key)
+    const strat = strats[key] || defaultStrat // 不同的参数有不同的合并策略  比如props，methods等
+    options[key] = strat(parent[key], child[key], vm, key) // 取出key对应策略进行合并
   }
   return options
 }

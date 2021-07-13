@@ -17,12 +17,12 @@ const idToTemplate = cached(id => {
 // runtimeOnly 版本走这个./runtime/index
 const mount = Vue.prototype.$mount
 
-// runtime + complier 走的是这个mount
+// runtime + complier 走的是这个mount 和上面那个 mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  el = el && query(el)  // 获取dom
+  el = el && query(el)  // 获取dom对象
 
   /* istanbul ignore if */
   if (el === document.body || el === document.documentElement) {

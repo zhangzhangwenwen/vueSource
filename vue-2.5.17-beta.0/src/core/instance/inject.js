@@ -40,13 +40,15 @@ export function resolveInject (inject: any, vm: Component): ?Object {
   if (inject) {
     // inject is :any because flow is not smart enough to figure out cached
     const result = Object.create(null)
+    // 拿到当前组件的key值 
     const keys = hasSymbol
       ? Reflect.ownKeys(inject).filter(key => {
         /* istanbul ignore next */
         return Object.getOwnPropertyDescriptor(inject, key).enumerable
       })
       : Object.keys(inject)
-
+ 
+    // 循环key 对每一个key 自底部向上 查找
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
       const provideKey = inject[key].from
@@ -58,6 +60,7 @@ export function resolveInject (inject: any, vm: Component): ?Object {
         }
         source = source.$parent
       }
+      // 如果没有找到 则使用inject中默认的default
       if (!source) {
         if ('default' in inject[key]) {
           const provideDefault = inject[key].default

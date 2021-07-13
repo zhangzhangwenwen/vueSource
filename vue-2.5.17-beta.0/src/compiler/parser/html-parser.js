@@ -196,10 +196,12 @@ export function parseHTML (html, options) {
       }
       advance(start[0].length)
       let end, attr
+      // 该循环匹配当前标签的属性
       while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
         advance(attr[0].length)
         match.attrs.push(attr)
       }
+      // 当匹配到结束标签'>'
       if (end) {
         match.unarySlash = end[1]
         advance(end[0].length)

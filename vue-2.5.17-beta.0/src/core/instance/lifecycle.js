@@ -51,14 +51,14 @@ export function lifecycleMixin (Vue: Class<Component>) {
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
-    const prevVnode = vm._vnode
+    const prevVnode = vm._vnode // 组件数据更新是调用该方法时 该值有值
     const prevActiveInstance = activeInstance
     activeInstance = vm
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
-      // initial render
+      // initial render 初次渲染
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
@@ -133,10 +133,11 @@ export function lifecycleMixin (Vue: Class<Component>) {
 
 export function mountComponent (
   vm: Component,
-  el: ?Element,
+  el: ?Element, // 真实的Dom 或者不传
   hydrating?: boolean
 ): Component {
   vm.$el = el
+  // 没有写render函数 并且template 并没有转化为render 函数
   if (!vm.$options.render) {
     vm.$options.render = createEmptyVNode
     if (process.env.NODE_ENV !== 'production') {
@@ -157,9 +158,9 @@ export function mountComponent (
       }
     }
   }
-  callHook(vm, 'beforeMount')
+  callHook(vm, 'beforeMount') // 钩子函数挂载之前
 
-  let updateComponent
+  let updateComponent // 先定义updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
     updateComponent = () => {
@@ -180,6 +181,7 @@ export function mountComponent (
     }
   } else {
     updateComponent = () => {
+      // 调用vm._render() 生成vnode
       vm._update(vm._render(), hydrating)
     }
   }

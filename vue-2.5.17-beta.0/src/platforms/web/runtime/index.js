@@ -30,6 +30,8 @@ Vue.config.isUnknownElement = isUnknownElement
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
+ // 在vue options 上扩展了directives和components属性
+
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
@@ -39,6 +41,7 @@ Vue.prototype.$mount = function (
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // hydrating服务端渲染有关
   return mountComponent(this, el, hydrating)
 }
 

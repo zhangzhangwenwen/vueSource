@@ -76,7 +76,7 @@ export default class Watcher {
       ? expOrFn.toString()
       : ''
     // parse expression for getter
-    if (typeof expOrFn === 'function') {
+    if (typeof expOrFn === 'function') { // 渲染watcher传的是updateComponent函数
       this.getter = expOrFn
     } else {
       this.getter = parsePath(expOrFn)
@@ -106,7 +106,7 @@ export default class Watcher {
     let value
     const vm = this.vm
     try {
-      value = this.getter.call(vm, vm)
+      value = this.getter.call(vm, vm)// 用户自己写的computed函数 // 执行的是updateComponent函数 // 就是update执行之后 也就是patch之后
     } catch (e) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)
@@ -243,6 +243,7 @@ export default class Watcher {
    * Depend on this watcher. Only for computed property watchers.
    */
   depend () {
+    // this 表示组件的watcher
     if (this.dep && Dep.target) {
       this.dep.depend()
     }

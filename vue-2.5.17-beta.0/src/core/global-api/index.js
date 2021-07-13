@@ -40,11 +40,15 @@ export function initGlobalAPI (Vue: GlobalAPI) {
     defineReactive
   }
 
+
+  // 都是在函数的构造函数上面加的  可直接通过vm.constructors
   Vue.set = set
   Vue.delete = del
   Vue.nextTick = nextTick
 
   Vue.options = Object.create(null)
+
+  // 初始化了'component','directive','filter'
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
