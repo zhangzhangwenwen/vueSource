@@ -106,7 +106,7 @@ export default class Watcher {
     let value
     const vm = this.vm
     try {
-      value = this.getter.call(vm, vm)// 用户自己写的computed函数 // 执行的是updateComponent函数 // 就是update执行之后 也就是patch之后
+      value = this.getter.call(vm, vm)// 用户自己写的computed函数 或者是updateComponent函数 // 就是update执行之后 也就是patch之后
     } catch (e) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)

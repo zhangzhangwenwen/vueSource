@@ -81,6 +81,7 @@ export default {
   },
 
   render () {
+    // this指的是keep-alive组件实例 在创建keep-alive组件实例 的时候 
     const slot = this.$slots.default
     const vnode: VNode = getFirstComponentChild(slot)
     const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions

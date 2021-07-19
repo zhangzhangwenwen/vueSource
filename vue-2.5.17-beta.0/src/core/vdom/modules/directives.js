@@ -22,6 +22,7 @@ function _update (oldVnode, vnode) {
   const isCreate = oldVnode === emptyNode
   const isDestroy = vnode === emptyNode
   const oldDirs = normalizeDirectives(oldVnode.data.directives, oldVnode.context)
+  // 标准化处理 例如"{"v-model":{"name":"model", "rawName":"v-model", "value":"", "expression":"msg", "modifiers":{}, "def":{}}}
   const newDirs = normalizeDirectives(vnode.data.directives, vnode.context)
 
   const dirsWithInsert = []

@@ -144,7 +144,8 @@ function genDefaultModel (
   }
 
   const { lazy, number, trim } = modifiers || {}
-  const needCompositionGuard = !lazy && type !== 'range'
+  // input type="range" 是进度条
+  const needCompositionGuard = !lazy && type !== 'range' // 不是lazy并且type不等于range的时候 是true
   const event = lazy
     ? 'change'
     : type === 'range'
@@ -158,7 +159,7 @@ function genDefaultModel (
   if (number) {
     valueExpression = `_n(${valueExpression})`
   }
-
+  // 该函数处理成msg=$event.target.value的
   let code = genAssignmentCode(value, valueExpression)
   if (needCompositionGuard) {
     code = `if($event.target.composing)return;${code}`
